@@ -24,3 +24,19 @@ If using docker-compose, set the following environment variables in a file calle
 | ADMIN_USERS                | The system administrators, separated by comma (,).    |
 | ELASTICSEARCH_URI          | The URI for the elasticsearch server                  |
 | ELASTICSEARCH_INDEX        | The name of the elasticsearch index on the server     |
+
+Start all the services with the following command:
+
+    docker-compose up
+
+Open a browser and navigate to `http://localhost:5000`
+
+Feel free to contribute!
+
+---
+
+Best regards!
+
+**Luiz Silva**<br>
+[folksilva@gmail.com](mailto://folksilva@gmail.com)
+
