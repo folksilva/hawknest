@@ -1,0 +1,179 @@
+{% extends '_base.html' %}
+{% block body %}
+<div id="app">
+    <md-app class="md-layout" md-mode="fixed">
+        <md-app-toolbar class="md-primary" md-elevation="3">
+            <div class="md-toolbar-section-start">
+                <md-button class="md-icon-button" v-if="isMobile" @click="toggleMainMenu()">
+                    <md-icon>menu</md-icon>
+                </md-button>
+                <div class="md-title app-title" v-if="!isMobile">
+                    <a href="{{ url_for('index') }}">
+                        <img src="{{ url_for('static', filename='img/icon-wb.svg') }}" style="height: 50px;">
+                        <div class="logo">{{ config['APP_NAME'] }}</div>
+                    </a>
+                </div>
+                <form id="mainSearchForm"
+                    {% if query_text %}class="main-search-form active"{%else%}class="main-search-form" :class="{active:mainSearchFocus}"{% endif %}
+                    method="GET" action="{{ url_for('search') }}">
+                    <input type="text" v-on:focus="mainSearchFocus = true" value="{{ query_text }}"
+                        v-on:blur="mainSearchFocus = false" name="q" id="mainSearch" class="main-search" 
+                        placeholder="Pesquisar no {{ config['APP_NAME'] }}" required>
+                    <md-button type="submit" class="md-primary md-icon-button">
+                        <md-icon>search</md-icon>
+                    </md-button>
+                </form>
+            </div>
+        </md-app-toolbar>
+
+        <md-app-drawer class="side-menu" :md-active.sync="menuVisible" md-permanent="clipped">
+            
+            <div class="side-menu-content md-scrollbar">
+                <md-list>
+                    {% for t in types %}
+                    <md-list-item href="{{ url_for('index', type_id=t._id) }}" {% if request.path.startswith(url_for('index', type_id=t._id)) %}class="active"{% endif %}>
+                        <md-icon>inbox</md-icon>
+                        <span class="md-list-item-text">{{t.name}}</span>
+                        {% if g.level > 2 %}
+                        <md-button href="{{ url_for('type', type_id=t._id) }}" class="md-icon-button md-list-action">
+                            <md-icon>edit</md-icon>
+                        </md-button>
+                        {% endif %}
+                    </md-list-item>
+                    {% endfor %}
+                </md-list>
+            </div>
+
+            <md-list class="side-menu-footer">
+                {% if g.level > 2 %}<md-list-item href="{{ url_for('archive') }}"{% if request.path.startswith(url_for('archive')) %}class="active"{% endif %}>
+                    <md-icon>delete</md-icon>
+                    <span class="md-list-item-text">Arquivo</span>
+                </md-list-item>{% endif %}
+                <md-divider></md-divider>
+                <md-list-item>
+                    <md-icon>person</md-icon>
+                    <span class="md-list-item-text">{{ g.user.cn[0] }}</span>
+                    <md-button href="{{ url_for('logout') }}" class="md-icon-button md-list-action">
+                        <md-icon>exit_to_app</md-icon>
+                    </md-button>
+                </md-list-item>
+                {% if g.level > 2 %}
+                <md-list-item md-expand>
+                    <md-icon>settings</md-icon>
+                    <span class="md-list-item-text">Configurações</span>
+
+                    <md-list slot="md-expand">
+                        <md-list-item class="md-inset {% if request.path.startswith(url_for('new_type')) %}active{% endif %}" href="{{ url_for('new_type') }}">
+                            <md-icon>add</md-icon>
+                            <span class="md-list-item-text">Novo tipo de documento</span>
+                        </md-list-item>
+                        {% if g.level > 3 %}
+                        <md-list-item class="md-inset {% if request.path.startswith(url_for('groups')) %}active{% endif %}" href="{{ url_for('groups') }}">
+                            <md-icon>group</md-icon>
+                            <span class="md-list-item-text">Grupos</span>
+                        </md-list-item>
+                        <md-list-item class="md-inset {% if request.path.startswith(url_for('permissions')) %}active{% endif %}" href="{{ url_for('permissions') }}">
+                            <md-icon>lock</md-icon>
+                            <span class="md-list-item-text">Permissões</span>
+                        </md-list-item>
+                        {% endif %}
+                    </md-list>
+                </md-list-item>
+                {% endif %}
+            </md-list>
+
+        </md-app-drawer>
+
+        <md-app-content>{% block content %}
+        {% if type_item %}{% include 'breadcrumb.html' %}{% endif %}
+        {% if items %}
+            <md-list class="md-triple-line" id="file-list">
+            {% for item in items|sort_docs %}
+                {% if type_item %}
+                {% if item.doc_type == 'dir' %}
+                <md-list-item @click="openPath('{{ url_for('index', type_id=type_item._id, path=path+'/'+item.slug if path else item.slug) }}')">
+                {% else %}
+                <md-list-item @click="openPath('{{ url_for('document', type_id=type_item._id, path=path+'/'+item.slug if path else item.slug, doc_id=item._id) }}')">
+                {% endif %}
+                {% else %}
+                <md-list-item @click="openPath('{{ url_for('document', type_id=None, path=path+'/'+item.slug if path else item.slug, doc_id=item._id) }}')">
+                {% endif %}
+                    <md-icon>{% if item.doc_type == 'dir' %}folder{% else %}insert_drive_file{% endif %}</md-icon>
+                    <div class="md-list-item-text">
+                        <strong class="filename">{{ item.name }}</strong>
+                        {% if item.doc_type == 'doc' %}
+                        <div class="filename">{{ item.file|filename }}</div>
+                        {% else %}
+                        <div class="filename">Pasta</div>
+                        {% endif %}
+                        <div><small>
+                        Criado em {{ item.creation_date|datetime }}
+                        {% if item.file_size %} - {{ item.file_size|filesize }}{% endif %}
+                        </small></div>
+                    </div>
+                    <md-menu :md-close-on-click="true" :md-align-trigger="true" md-size="small" md-direction="bottom-end">
+                        <md-button class="md-icon-button md-list-action" md-menu-trigger>
+                            <md-icon>more_vert</md-icon>
+                        </md-button>
+                        <md-menu-content>
+                            {% if item.doc_type == 'doc' %}
+                            <md-menu-item target="_blank" href="{{ url_for('download', filename=item.file) }}">
+                                <md-icon>cloud_download</md-icon>
+                                <span>Download</span>
+                            </md-menu-item>
+                            {% endif %}
+                            {% if type_item %}
+                            <md-menu-item href="{{ url_for('archive_document', type_id=type_item._id, path=path+'/'+item.slug, doc_id=item._id) }}">
+                                <md-icon>delete_outline</md-icon>
+                                <span>Arquivar</span>
+                            </md-menu-item>
+                            {% endif %}
+                        </md-menu-content>
+                    </md-menu>
+                </md-list-item>
+            {% endfor %}
+            </md-list>
+        {% else %}
+            <md-empty-state
+                class="md-primary"
+                md-icon="search"
+                md-label="Pesquise para começar"
+                md-description="Escolha um tipo de documento ao lado ou faça uma busca em todos os documentos.">
+            </md-empty-state>
+        {% endif %}
+        {% endblock %}</md-app-content>
+    </md-app>
+    {% if g.level > 1 and request.endpoint == 'index' %}        
+    {% if type_item %}
+    <md-button href="{{ url_for('create', type_id=type_item._id, path=path) }}" class="md-fab md-primary md-fab-bottom-right"><md-icon>add</md-icon></md-button>
+    {% endif %}
+    {% endif %}
+
+    {% raw %}
+    <template v-if="messages.length > 0">
+    <md-snackbar md-position="center" :key="index" v-for="(message, index) in messages" md-persistent :md-active="showNotification(message)">
+        <span>{{ message }}</span>
+        <md-button class="md-primary" @click="hideNotification(message)">Ok</md-button>
+    </md-snackbar>
+    </template>
+    {% endraw %}
+</div>
+{% endblock %}
+
+
+
+{% block scripts %}
+<script>
+var typeData = null;
+var groupData = null;
+var permissionsData = null;
+var messagesData = {{ get_flashed_messages() | tojson | safe }};
+var documentData = {
+    type: {% if type_item %}'{{ type_item._id }}'{% else %}null{% endif %},
+    level: {{ inherited_level|default(1,true) }},
+    doc_type: 'doc'
+};
+</script>
+{% block appscripts %}{% endblock %}
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

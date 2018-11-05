@@ -1,0 +1,264 @@
+html {
+    /*background-color: #303030;*/
+    overflow: hidden;
+}
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+#app {
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+}
+.md-app {
+    flex: 1;
+}
+
+.md-toolbar .app-title a {
+    margin-right: 16px;
+    text-align: center;
+    font-weight: bold;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    align-content: center;
+    justify-content: flex-start;
+}
+.md-toolbar .app-title div.logo {
+    color: white;
+    flex: 1;
+    font-size: 30px;
+    padding: 0;
+    font-family: 'Russo One', sans-serif;
+}
+
+.main-search-form,
+.error-search-form {
+    flex: 1;
+    display: flex;
+    margin: 0 16px 0 8px;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.06);
+    padding: 6px 8px 6px 16px;
+    border-radius: 2px;
+}
+.error-search-form {
+    margin: 0px 8px;
+}
+.main-search-form.active {
+    background: white;
+    color: rgba(0, 0, 0, 0.85);
+}
+
+.main-search-form .md-icon,
+.main-search-form .md-button {
+    color: currentColor !important;
+}
+
+.main-search {
+    min-width: 88px;
+    height: 36px;
+    line-height: 36px;
+    margin-left: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 0 8px;
+    flex: 1;
+    border: none;
+    background: none;
+    outline: none;
+    color: currentColor;
+}
+.main-search::placeholder {
+    color: currentColor;
+    opacity: 0.6;
+}
+
+.empty-home {
+    text-align: center;
+    padding: 0 10%;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: currentColor;
+    opacity: 0.5;
+}
+.empty-home .md-icon {
+    font-size: 20vw !important;
+    line-height: 20vw !important;
+    height: 20vw;
+}
+
+.side-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.side-menu-header {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 24px 8px 8px;
+}
+
+.side-menu-content {
+    flex: 1;
+}
+
+.side-menu-footer {
+   flex-shrink: 0;
+}
+
+.side-menu .md-list-item.active {
+    background: rgba(0, 0, 0, 0.1);
+}
+.subapp,
+.subapp .md-app {
+    min-height: 100%;
+    flex: 1;
+    display: flex;
+}
+
+.breadcrumb {
+    font-size: 12px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: flex-start;
+    margin-bottom: 16px;
+}
+.breadcrumb a,
+.breadcrumb .md-icon {
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    margin: 0;
+}
+
+#file-list {
+    margin-bottom: 90px;
+}
+
+.no-wrap {
+    flex-wrap: nowrap;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.file-title {
+    text-decoration: none !important;
+}
+.file-title:hover,
+.file-title:active,
+.file-title:focus {
+    text-decoration: none !important;
+}
+
+.filename {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+dl {
+    width: 100%;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    font-size: 90%;
+    line-height: 150%;
+}
+dt {
+    float: left;
+    width: 90px;
+    padding: 0;
+    margin: 0;
+    font-weight: bold;
+    clear: left;
+}
+dd {
+    float: left;
+    width: calc(100% - 90px);
+    padding: 0;
+    margin: 0
+}
+
+.footnotes {
+    padding: 8px;
+    font-size: 85%;
+    text-align: center;
+    color: rgba(150, 150, 150, 0.6);
+}
+
+@media (min-width: 600px){
+    .main-search-form {
+        max-width: 60%;
+    }
+    .app-title {
+        width: 192px;
+    }
+}
+
+@media (max-width: 945px) {
+    .main-search-form {
+        margin: 6px;
+        margin-left: 16px;
+    }
+    .main-search {
+        height: 32px;
+        line-height: 32px;
+    }
+    .main-search-form .md-icon-button {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+        margin: 0 6px;
+    }
+}
+
+@media (max-width: 599px) {
+    .filename {
+        max-width: calc(100vw - 180px);
+    }
+}
+
+@media (min-width: 600px) and (max-width: 959px) {
+    .filename {
+        max-width: calc(100vw - (240px + 180px));
+    }
+    .md-app-drawer {
+        width: 240px;
+    }
+}
+
+@media (min-width: 960px) and (max-width: 1279px) {
+    .filename {
+        max-width: calc(100vw - (320px + 180px));
+    }
+    .md-app-drawer {
+        width: 320px;
+    }
+}
+
+@media (min-width: 1280px) and (max-width: 1919px) {
+    .filename {
+        max-width: calc(100vw - (320px + 180px));
+    }
+    .md-app-drawer {
+        width: 320px;
+    }
+}
+
+@media (min-width: 1920px) {
+    .filename {
+        max-width: calc(100vw - (320px + 180px));
+    }
+    .md-app-drawer {
+        width: 320px;
+    }
+}

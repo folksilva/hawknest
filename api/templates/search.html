@@ -1,0 +1,49 @@
+{% extends 'app.html' %}
+{% block content %}
+{% if results.hits.total > 0 %}
+    <md-list class="md-triple-line" id="file-list">
+    {% for item in results.hits.hits|sort(reverse=True, attribute='_score') %}
+        <md-list-item @click="openPath('{{ url_for('document', type_id=item._source.type, path=item._source.path+'/'+item._source.slug if item._source.path else item._source.slug, doc_id=item._id) }}')">
+            <md-icon>{% if item._source.doc_type == 'dir' %}folder{% else %}insert_drive_file{% endif %}</md-icon>
+            <div class="md-list-item-text">
+                <strong class="filename">{{ item._source.name }}</strong>
+                {% if item._source.doc_type == 'doc' %}
+                <div class="filename">{{ item._source.file|filename }}</div>
+                {% else %}
+                <div class="filename">Pasta</div>
+                {% endif %}
+                <div><small>
+                Criado em {{ item._source.creation_date }}
+                {% if item._source.file_size %} - {{ item._source.file_size|filesize }}{% endif %}
+                </small></div>
+            </div>
+            <md-menu :md-close-on-click="true" :md-align-trigger="true" md-size="small" md-direction="bottom-end">
+                <md-button class="md-icon-button md-list-action" md-menu-trigger>
+                    <md-icon>more_vert</md-icon>
+                </md-button>
+                <md-menu-content>
+                    {% if item._source.doc_type == 'doc' %}
+                    <md-menu-item target="_blank" href="{{ url_for('download', filename=item._source.file) }}">
+                        <md-icon>cloud_download</md-icon>
+                        <span>Download</span>
+                    </md-menu-item>
+                    {% endif %}
+                    {% if item._source.type %}
+                    <md-menu-item href="{{ url_for('archive_document', type_id=item._source.type, path=item._source.path+'/'+item._source.slug, doc_id=item._id) }}">
+                        <md-icon>delete_outline</md-icon>
+                        <span>Arquivar</span>
+                    </md-menu-item>
+                    {% endif %}
+                </md-menu-content>
+            </md-menu>
+        </md-list-item>
+    {% endfor %}
+    </md-list>
+{% else %}
+    <md-empty-state
+        class="md-primary"
+        md-icon="search"
+        md-label="Nenhum resultado encontrado">
+    </md-empty-state>
+{% endif %}
+{% endblock %}

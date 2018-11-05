@@ -1,0 +1,28 @@
+<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+<input name="level" type="hidden" :value="document.level">
+<input name="name" type="hidden" :value="document.name">
+<input name="description" type="hidden" :value="document.description">
+
+<div class="md-field md-theme-default md-required md-has-value" v-if="document.doc_type=='doc'">
+    <label>Selecione o arquivo</label>
+    <input class="md-input" name="file" required type="file">
+</div>
+
+<md-field>
+    <label>Nome</label>
+    <md-input v-model="document.name" required></md-input>
+</md-field>
+
+<md-field>
+    <label>Descrição</label>
+    <md-textarea v-model="document.description"></md-textarea>
+</md-field>
+
+<div class="md-field md-theme-default md-has-value">
+    <label>Nível de acesso</label>
+    <div>
+        <md-radio v-model="document.level" :value="1">Todos</md-radio>
+        <md-radio v-model="document.level" :value="2">Colaboradores</md-radio>
+        <md-radio v-model="document.level" :value="3">Gerência</md-radio>
+    </div>
+</div>

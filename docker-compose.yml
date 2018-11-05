@@ -1,0 +1,33 @@
+version: '2'
+
+services:
+  search:
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.4.2
+    volumes:
+      - search-storage:/usr/share/elasticsearch/data:z
+    ports:
+      - "9200:9200"
+  
+  database:
+    image: mongo
+    volumes:
+      - database-storage:/data/db:z
+    ports:
+      - "27017:27017"
+
+  api:
+    build: api/
+    volumes:
+      - ./api/:/opt/hawknest:z
+    ports:
+      - "5000:5000"
+    environment: 
+      FLASK_ENV: development
+      FLASK_APP: main.py
+    env_file: secrets.env
+    command: python -m flask run --host=0.0.0.0
+
+
+volumes:
+  search-storage:
+  database-storage:

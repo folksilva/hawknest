@@ -1,0 +1,26 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <div class="md-layout md-alignment-center-left">
+        <md-button class="md-icon-button" href="{{ url_for('groups') }}">
+            <md-icon>arrow_back</md-icon>
+        </md-button>
+        <h2 class="md-display-1 md-layout-item">{{ group.name }}</h2>
+    </div>
+    <md-chips id="users" required md-check-duplicated v-model="group.users" md-placeholder="Adicionar usuário..."></md-chips>
+    <p>Digite o nome dos usuários, normalmente o mesmo do e-mail antes do @, para incluí-los no grupo.</p>
+    <form method="POST" action="{{ url_for('group', group_id=group._id) }}">
+            <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+            <input name="users" type="hidden" :value="group.users">
+        <div>
+            <md-button class="md-primary md-raised" :disabled="!group.users" type="submit">Salvar</md-button>
+            <md-button href="{{ url_for('group_delete', group_id=group._id) }}" type="button">Excluir</md-button>
+        </div>
+    </form>
+{% endblock %}
+
+{% block appscripts %}
+<script>
+var groupData = {{ group | tojson | safe }};
+</script>
+{% endblock %}

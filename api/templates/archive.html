@@ -1,0 +1,26 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    {% include 'breadcrumb.html' %}
+
+    <div class="md-layout md-alignment-center-left">
+        <md-button class="md-icon-button" href="{{ url_for('index', type_id=type_item._id, path=path) }}">
+            <md-icon>arrow_back</md-icon>
+        </md-button>
+        <h2 class="md-display-1 md-layout-item">Arquivar {{ document.name }}</h2>
+    </div>
+
+    <form method="POST">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <p class="md-body-2">Atenção!</p>
+        {% if document.doc_type == 'dir' %}
+        <p class="md-body-1">Essa ação não poderá ser desfeita, todo os documentos dentro desta pasta também serão movidos para o arquivo. Apenas os gerentes podem visualizar o conteúdo arquivado.</p>
+        {% else %}
+        <p class="md-body-1">Essa ação não poderá ser desfeita. Apenas os gerentes podem visualizar o conteúdo arquivado.</p>
+        {% endif %}
+        
+        <md-button type="submit" class="md-primary md-raised">Arquivar</md-button>
+        <md-button href="{{ url_for('index', type_id=type_item._id, path=path) }}">Cancelar</md-button>
+    </form>
+
+{% endblock %}

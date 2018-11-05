@@ -1,0 +1,10 @@
+# For application
+Flask==1.0.2
+Flask-PyMongo==2.1.0
+Flask-SimpleLDAP==1.2.0
+Flask-Cors==3.0.6
+elasticsearch==6.3.1
+textract==1.6.1
+pandas==0.23.4
+spacy==2.0.16
+translitcodec==0.4.0

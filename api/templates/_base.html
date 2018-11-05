@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width,initial-scale=1,minimal-ui" name="viewport">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic|Russo+One|Material+Icons">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vue-material.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/theme-default.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+    <title>{% block title %}{{ config['APP_NAME'] }}{% endblock %}</title>
+    <meta name="theme-color" content="#448aff">
+    <link rel="icon" href="{{ url_for('static', filename='img/icon-hc.ico') }}" type="image/x-icon"/>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='img/icon-hc.ico') }}" type="image/x-icon"/>
+    <style>
+    body.off {
+      background-image: url('{{ url_for('static', filename='img/frame.svg') }}');
+      background-repeat: repeat-x;
+      background-position: top left;
+    }
+    body.off #app {
+      opacity: 0;
+      transition: opacity 200ms linear;
+    }
+    body.on #app {
+      opacity: 1;
+      transition: opacity 200ms linear;
+    }
+    </style>
+  </head>
+
+  <body class="off">
+    {% block body %}
+    <div id="app">
+      <!-- Your code here -->
+    </div>
+    {% endblock %}
+    {% if config.DEBUG %}
+    <script src="{{ url_for('static', filename='js/vue.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vue-material.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/axios.js') }}"></script>
+    {% else %}
+    <script src="{{ url_for('static', filename='js/vue.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/vue-material.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/axios.min.js') }}"></script>
+    {% endif %}
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

@@ -1,0 +1,31 @@
+<div class="breadcrumb">
+<a href="{{ url_for('index') }}">
+    <md-icon>home</md-icon>
+</a>
+{% if type_item %}
+<md-icon>arrow_right</md-icon>
+<a href="{{ url_for('index', type_id=type_item._id) }}">
+    {{ type_item.name }}
+</a>
+{% endif %}
+{% if path %}
+{% for dir in path_parts %}
+{% with dir_path = get_path(type_item._id, '/'.join(path_parts[:loop.index])) %}
+<md-icon>arrow_right</md-icon>
+{% if loop.first %}
+<a href="{{ url_for('index', type_id=type_item._id, path=dir_path.slug) }}">
+    {{ dir_path.name }}
+</a>
+{% elif loop.last %}
+<span>
+    {{ dir_path.name }}
+</span>
+{% else %}
+<a href="{{ url_for('index', type_id=type_item._id, path=dir_path.path+'/'+dir_path.slug) }}">
+    {{ dir_path.name }}
+</a>
+{% endif %}
+{% endwith %}
+{% endfor %}
+{% endif %}
+</div>

@@ -1,0 +1,56 @@
+{% extends '_base.html' %}
+{% block body %}
+<div id="app" class="md-layout md-alignment-center-center" style="min-height: 500px;">
+    <div class="md-layout md-alignment-center-center">
+        <div class="md-layout-item md-size-30 md-small-size-90">
+            <md-card>
+                <md-card-header>
+                    <md-card-header-text>
+                        <div class="md-title">{{ config['APP_NAME'] }}</div>
+                        <div class="md-subhead">{{ code }}</div>
+                    </md-card-header-text>
+                    <md-card-media>
+                        <img src="{{ url_for('static', filename="img/icon-hi.svg") }}">
+                    </md-card-media>
+                </md-card-header>
+                <md-card-content>
+                    <md-empty-state
+                        class="md-accent"
+                        md-icon="{{ icon }}"
+                        md-label="{{ message }}"
+                        md-description="{{ description }}">
+                    </md-empty-state>
+                    <form id="errorSearchForm"
+                    {% if query_text %}class="error-search-form active"{%else%}class="error-search-form" :class="{active:errorSearchFocus}"{% endif %}
+                        method="GET" action="{{ url_for('search') }}">
+                        <input type="text" v-on:focus="errorSearchFocus = true"
+                            v-on:blur="errorSearchFocus = false" name="q" id="mainSearch" class="main-search" 
+                            placeholder="Pesquisar no {{ config['APP_NAME'] }}" required>
+                        <md-button type="submit" class="md-primary md-icon-button">
+                            <md-icon>search</md-icon>
+                        </md-button>
+                    </form>
+                </md-card-content>
+            </md-card>
+            <div class="footnotes">
+                &copy; 2018 - Sport Club Corinthians Paulista
+                <div><img src="{{ url_for('static', filename='img/iptec.png') }}"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    Vue.use(VueMaterial.default)
+
+    new Vue({
+        el: '#app',
+        mounted: function(){
+            document.body.className = "on";
+            document.body.style.overflow = "auto";
+        }
+    });
+</script>
+{% endblock %}

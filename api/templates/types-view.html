@@ -1,0 +1,16 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <form method="POST" action="{{ url_for('type', type_id=type_id) }}" md-if="type">
+        <h2 class="md-display-1">Editar tipo de documento</h2>
+        {% include 'types-form.html' %}
+        <md-button type="submit" class="md-primary md-raised">Salvar</md-button>
+        <md-button href="{{ url_for('type_delete', type_id=type_id) }}">Excluir</md-button>
+    </form>
+{% endblock %}
+
+{% block appscripts %}
+<script>
+var typeData = {{ type | tojson | safe }};
+</script>
+{% endblock %}

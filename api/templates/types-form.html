@@ -1,0 +1,27 @@
+<input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+<input name="name" type="hidden" :value="type.name">
+<input name="level" type="hidden" :value="type.level">
+<input name="groups" type="hidden" :value="type.groups">
+
+<md-field>
+    <label for="name">Nome do tipo</label>
+    <md-input id="name" required v-model="type.name" />
+</md-field>
+<div class="md-field md-theme-default md-has-value">
+    <label>Nível de acesso</label>
+    <div>
+        <md-radio v-model="type.level" :value="1">Todos</md-radio>
+        <md-radio v-model="type.level" :value="2">Colaboradores</md-radio>
+        <md-radio v-model="type.level" :value="3">Gerência</md-radio>
+    </div>
+</div>
+<md-field>
+    <label for="groups">Grupos autorizados</label>
+    <md-select id="groups" v-model="type.groups" placeholder="Nenhum grupo (todos os usuários)" multiple>
+        {% for g in groups %}
+        <md-option value="{{g._id}}">
+            {{g.name}}
+        </md-option>
+        {% endfor %}
+    </md-select>
+</md-field>

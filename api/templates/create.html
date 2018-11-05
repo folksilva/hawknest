@@ -1,0 +1,18 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    {% include 'breadcrumb.html' %}
+    <h2 class="md-display-1">Criar documento ou pasta</h2>
+    <form method="POST" enctype="multipart/form-data">
+        <input name="doc_type" type="hidden" :value="document.doc_type">
+        <div class="md-field md-theme-default md-has-value">
+            <label>Deseja criar...</label>
+            <div>
+                <md-radio v-model="document.doc_type" value="doc">... um documento</md-radio>
+                <md-radio v-model="document.doc_type" value="dir">... uma pasta</md-radio>
+            </div>
+        </div>
+        {% include 'document-form.html' %}
+        <md-button type="submit" class="md-primary md-raised">Criar</md-button>
+    </form>
+{% endblock %}

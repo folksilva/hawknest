@@ -1,0 +1,34 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <h2 class="md-display-1">Grupos de usuários</h2>
+    
+    <form method="POST" action="{{ url_for('groups') }}">
+        <div class="md-layout">
+            <div class="md-layout-item md-size-40 md-medium-size-50 md-small-size-70 md-xsmall-size-70">
+                <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+                <input name="name" type="hidden" :value="group.name">
+                <md-field>
+                    <label for="name">Nome do Grupo</label>
+                    <md-input id="name" required v-model="group.name" />
+                </md-field>
+            </div>
+            <div class="md-layout-item md-size-20 md-medium-size-40 md-small-size-20 md-xsmall-size-20">
+                <md-button class="md-primary md-raised" :disabled="!group.name" type="submit">Criar</md-button>
+            </div>
+        </div>
+    </form>
+
+    <md-list class="md-double-line">
+        {% for group in groups %}
+        <md-list-item href="{{ url_for('group', group_id=group._id) }}">
+            <md-icon>group</md-icon>
+            <div class="md-list-item-text">
+                <span>{{ group.name }}</span>
+                <span>{{ group.users|length }} usuário{{ group.users|length|pluralize }}</span>
+            </div>
+        </md-list-item>
+        {% endfor %}
+    </md-list>
+    
+{% endblock %}

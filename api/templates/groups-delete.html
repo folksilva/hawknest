@@ -1,0 +1,18 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <div class="md-layout md-alignment-center-left">
+        <md-button class="md-icon-button" href="{{ url_for('group', group_id=group._id) }}">
+            <md-icon>arrow_back</md-icon>
+        </md-button>
+        <h2 class="md-display-1 md-layout-item">Excluir {{ group.name }}</h2>
+    </div>
+    <form method="POST" action="{{ url_for('group_delete', group_id=group._id) }}">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <p class="md-body-2">Atenção!</p>
+        <p class="md-body-1">Essa ação não poderá ser desfeita, todos os tipos de
+        documento que possuem apenas este grupo passarão a ser liberados para todos.</p>
+        <md-button class="md-primary md-raised" type="submit">Excluir</md-button>
+        <md-button href="{{ url_for('group', group_id=group._id) }}">Cancelar</md-button>
+    </form>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <h2 class="md-display-1">Permissões</h2>
+    <strong><label for="employees">Colaboradores</label></strong>
+    <md-chips id="employees" md-check-duplicated v-model="permissions.employees" md-placeholder="Adicionar usuário..."></md-chips>
+    <p>Digite o nome dos usuários, normalmente o mesmo do e-mail antes do @, para dar a permissão de colaborador,
+    sem essa permissão o usuário apenas poderá ver tipos e documentos liberados para todos.</p>
+    <strong><label for="managers">Gerentes</label></strong>
+    <md-chips id="managers" md-check-duplicated v-model="permissions.managers" md-placeholder="Adicionar usuário..."></md-chips>
+    <p>Digite o nome dos usuários, normalmente o mesmo do e-mail antes do @, para dar a permissão de gerentes, 
+    os gerentes podem ver todos os tipos e documentos, independente dos grupos.</p>
+    <form method="POST" action="{{ url_for('permissions') }}">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <input name="employees" type="hidden" :value="permissions.employees">
+        <input name="managers" type="hidden" :value="permissions.managers">
+        <md-button type="submit" class="md-primary md-raised">Salvar</md-button>
+    </form>
+{% endblock %}
+
+{% block appscripts %}
+<script>
+var permissionsData = {{ permissions | tojson | safe }};
+</script>
+{% endblock %}

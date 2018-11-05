@@ -1,0 +1,49 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    {% if type_item %}{% include 'breadcrumb.html' %}{% endif %}
+
+    <md-card>
+        <md-card-header>
+            <md-card-media>
+                <md-avatar class="md-avatar-icon md-large">
+                    <md-icon>insert_drive_file</md-icon>
+                </md-avatar>
+            </md-card-media>
+            <md-card-header-text>
+                <div class="md-title">{{ document.name }}</div>
+                <div class="md-subhead">{{ document.file|filename }}</div>
+            </md-card-header-text>
+        </md-card-header>
+
+        <md-card-content>
+            {% if document.description %}
+            <p>{{ document.description }}</p>
+            {% else %}
+            <p>Sem descrição</p>
+            {% endif %}
+            <dl>
+                <dt>Tamanho:</dt>
+                <dd>{% if document.file_size %}{{ document.file_size|filesize }}{% else %}--{% endif %}</dd>
+                <dt>Criado em:</dt>
+                <dd>{{ document.creation_date|datetime }}</dd>
+                <dt>Criado por:</dt>
+                <dd>{{ document.creator }}</dd>
+            </dl>
+        </md-card-content>
+
+        <md-card-actions>
+            <md-button target="_blank" href="{{ url_for('download', filename=document.file) }}" class="md-primary">Download</md-button>
+            {% if type_item %}
+            <md-button href="{{ url_for('archive_document', type_id=type_item._id, path=path, doc_id=document._id) }}">Arquivar</md-button>
+            {% endif %}
+        </md-card-actions>
+    </md-card>
+    
+    <h4>Esse arquivo fala sobre:</h4>
+    <ul>
+    {% for entity in document.entities %}
+        <li>{{ entity }}</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

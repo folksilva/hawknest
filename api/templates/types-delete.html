@@ -1,0 +1,18 @@
+{% extends 'app.html' %}
+
+{% block content %}
+    <div class="md-layout md-alignment-center-left">
+        <md-button class="md-icon-button" href="{{ url_for('type', type_id=type._id) }}">
+            <md-icon>arrow_back</md-icon>
+        </md-button>
+        <h2 class="md-display-1 md-layout-item">Excluir {{ type.name }}</h2>
+    </div>
+    <form method="POST" action="{{ url_for('type_delete', type_id=type._id) }}" md-if="type">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <p class="md-body-2">Atenção!</p>
+        <p class="md-body-1">Essa ação não poderá ser desfeita, todos os 
+        documentos deste tipo serão movidos para o arquivo.</p>
+        <md-button type="submit" class="md-primary md-raised">Excluir</md-button>
+        <md-button href="{{ url_for('type', type_id=type._id) }}">Cancelar</md-button>
+    </form>
+{% endblock %}

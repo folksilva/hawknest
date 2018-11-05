@@ -1,0 +1,65 @@
+{% extends '_base.html' %}
+{% block body %}
+<div id="app" class="md-layout md-alignment-center-center" style="min-height: 500px;">
+    <form class="md-layout md-alignment-center-center"
+        method="POST" action="{{ url_for('login', next=next) }}">
+        <input name="_csrf_token" type="hidden" value="{{ csrf_token() }}">
+        <input name="username" type="hidden" :value="form.username">
+        <input name="password" type="hidden" :value="form.password">
+        <div class="md-layout-item md-size-30 md-small-size-90">
+            <md-card>
+                <md-card-header>
+                    <md-card-header-text>
+                        <div class="md-title">{{ config['APP_NAME'] }}</div>
+                        <div class="md-subhead">Login</div>
+                    </md-card-header-text>
+                    <md-card-media>
+                        <img src="{{ url_for('static', filename="img/icon-hi.svg") }}">
+                    </md-card-media>
+                </md-card-header>
+                <md-card-content>
+                    <md-field class="{% if error %}md-invalid{% endif %}">
+                        <label for="username">Usuário</label>
+                        <md-input v-model="form.username" required></md-input>
+                    </md-field>
+                    <md-field class="{% if error %}md-invalid{% endif %}">
+                        <label for="password">Senha</label>
+                        <md-input v-model="form.password" type="password" required></md-input>
+                    </md-field>
+                    {% if error == 'NO_CREDENTIALS' %}
+                    <span class="md-error">Informe o seu usuário e senha.</span>
+                    {% elif error == 'INCORRECT_CREDENTIALS' %}
+                    <span class="md-error">Verifique se digitou corretamente seu usuário e senha.</span>
+                    {% endif %}
+                </md-card-content>
+                <md-card-actions>
+                    <md-button type="submit" class="md-primary md-raised">Login</md-button>
+                </md-card-actions>
+            </md-card>
+            <div class="footnotes">
+                &copy; 2018 - Hawknest
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    Vue.use(VueMaterial.default)
+
+    new Vue({
+        el: '#app',
+        data: {
+            form: {
+                username: null,
+                password: null
+            }
+        },
+        mounted: function(){
+            document.body.className = "on";
+            document.body.style.overflow = "auto";
+        }
+    });
+</script>
+{% endblock %}
